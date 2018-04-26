@@ -8,24 +8,28 @@ from django.core import serializers
 from .models import DeviceState, DeviceControl
 
 
-def check_device_humidity(request):
+def check_device_moisture(request):
     last = last_status(request)
     last_state_of_device = json.loads(last.content.decode('utf-8'))
-    current_humidity = last_state_of_device['humidity']
-    thresold_lower_humidity = 15
-    thresold_upper_humidity = 50
-    if current_humidity < thresold_lower_humidity:
-        turn_device(1)
-        print("Device ON")
+    current_moisture = last_state_of_device['moisture']
+    state, lower_threshold_moisture, upper_threshold_moisture, mode = get_device_detail()
+    # It is following inverse value logic
+    # To check whether mode is automated if not then skip
+    if mode == 'automated':
+        if current_moisture < lower_threshold_moisture:
+            turn_device(0)
+            print("Device OFF")
 
-    if current_humidity > thresold_upper_humidity:
-        turn_device(0)
-        print("Device Off")
+        if current_moisture > upper_threshold_moisture:
+            turn_device(1)
+            print("Device ON")
 
 
 """
 value == 1:ON ; 0:OFF
 """
+
+
 def turn_device(value):
     obj = DeviceControl.objects.get(id=1)
     obj.set_state = value
@@ -35,7 +39,7 @@ def turn_device(value):
 def last_status(request):
     res = {}
     q = DeviceState.objects.last()
-    res['humidity'] = q.humidity
+    res['moisture'] = q.moisture
     res['status'] = q.status
     return JsonResponse(res)
 
@@ -47,11 +51,11 @@ def all_status(request):
 
 
 def create_status(request):
-    humidity = request.GET['humidity']
+    moisture = request.GET['moisture']
     status = request.GET['status']
-    device = DeviceState(humidity=humidity, status=status)
+    device = DeviceState(moisture=moisture, status=status)
     device.save()
-    check_device_humidity(request)
+    check_device_moisture(request)
     res = {'status': 1, 'message': 'device status updated'}
     return JsonResponse(res)
 
@@ -60,3 +64,19 @@ def read_instruction(request):
     device_control = DeviceControl.objects.get(id=1)
     set_state = device_control.set_state
     return JsonResponse({'set_state': set_state})
+
+
+def get_device_detail():
+    try:
+        device = DeviceControl.objects.first()
+        lower_threshold = device['lower_threshold']
+        upper_threshold = device['upper_threshold']
+        state = device['set_state']
+        mode = device['mode']
+    except:
+        lower_threshold = 15
+        upper_threshold = 50
+        state = False
+        mode = 'automated'
+    return (state, lower_threshold, upper_threshold, mode)
+
