@@ -17,12 +17,12 @@ def check_device_moisture(request):
     # To check whether mode is automated if not then skip
     if mode == 'automated':
         if current_moisture < lower_threshold_moisture:
-            turn_device(0)
-            print("Device OFF")
-
-        if current_moisture > upper_threshold_moisture:
             turn_device(1)
             print("Device ON")
+
+        if current_moisture > upper_threshold_moisture:
+            turn_device(0)
+            print("Device OFF")
 
 
 """
