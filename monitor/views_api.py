@@ -15,6 +15,7 @@ def check_device_moisture(request):
     state, lower_threshold_moisture, upper_threshold_moisture, mode = get_device_detail()
     # It is following inverse value logic
     # To check whether mode is automated if not then skip
+    print(mode)
     if mode == 'automated':
         if current_moisture < lower_threshold_moisture:
             turn_device(1)
@@ -69,14 +70,16 @@ def read_instruction(request):
 def get_device_detail():
     try:
         device = DeviceControl.objects.first()
-        lower_threshold = device['lower_threshold']
-        upper_threshold = device['upper_threshold']
-        state = device['set_state']
-        mode = device['mode']
+        lower_threshold = device.lower_threshold
+        upper_threshold = device.upper_threshold
+        state = device.set_state
+        mode = device.mode
     except:
+        print("There is an Exception")
         lower_threshold = 15
         upper_threshold = 50
         state = False
         mode = 'automated'
+
     return (state, lower_threshold, upper_threshold, mode)
 
