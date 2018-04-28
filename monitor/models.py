@@ -15,8 +15,8 @@ class DeviceState(models.Model):
 
 class DeviceControl(models.Model):
     set_state = models.BooleanField()
-    lower_threshold = models.IntegerField(default=15)
-    upper_threshold = models.IntegerField(default=50)
+    lower_threshold = models.IntegerField(default=100)
+    upper_threshold = models.IntegerField(default=500)
     mode = models.CharField(max_length=10, choices=MODE_CHOICES, default='automated')  # 0=Automated, 1=Manual
 
     def __str__(self):
