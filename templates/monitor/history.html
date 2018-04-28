@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+Jai Shree Ram
+radhe radhe
+{% block 'body' %}
+    <h1>History</h1>
+    <table class="table table-striped table-hover table-bordered">
+        <th>Moisture Value</th>
+        <th>Motor Status</th>
+        <th>Time</th>
+        {% for device in devices %}
+            <tr>
+                <td>{{ device.moisture }}</td>
+                <td>{% if device.status == 'True' %}ON{% else %}OFF{% endif %}</td>
+                <td>{{ device.time }}</td>
+            </tr>
+
+        {% endfor %}
+    </table>
+    <ul class="pagination pagination-lg">
+        {% for i in paginator.page_range %}
+            {% if page_obj.number == i %}
+                <li class="active"><a href="?page={{ i }}">{{ i }}</a></li>
+            {% else %}
+                <li><a href="?page={{ i }}">{{ i }}</a></li>
+            {% endif %}
+        {% endfor %}
+    </ul>
+
+{% endblock %}
