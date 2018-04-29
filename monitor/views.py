@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-from django.views.generic import ListView
+from django.views.generic import ListView, CreateView
 from .models import DeviceState, DeviceControl
 
 
@@ -23,3 +23,8 @@ class LogView(ListView):
     template_name = 'monitor/history.html'
     context_object_name = 'devices'
     paginate_by = 10
+
+class DeviceStateCreateView(CreateView):
+    model = DeviceState
+    fields = ('moisture', 'status')
+    template_name = "monitor/test.html"

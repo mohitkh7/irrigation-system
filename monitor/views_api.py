@@ -29,8 +29,6 @@ def check_device_moisture(request):
 """
 value == 1:ON ; 0:OFF
 """
-
-
 def turn_device(value):
     obj = DeviceControl.objects.get(id=1)
     obj.set_state = value

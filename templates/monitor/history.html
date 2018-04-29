@@ -10,7 +10,7 @@ radhe radhe
         {% for device in devices %}
             <tr>
                 <td>{{ device.moisture }}</td>
-                <td>{% if device.status == 'True' %}ON{% else %}OFF{% endif %}</td>
+                <td>{% if device.status %}ON{% else %}OFF{% endif %}</td>
                 <td>{{ device.time }}</td>
             </tr>
 
