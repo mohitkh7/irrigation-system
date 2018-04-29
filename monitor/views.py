@@ -6,10 +6,15 @@ from .models import DeviceState, DeviceControl
 
 
 def index(request):
-    device_state = DeviceState.objects.last()
-    print(device_state)
-    # return HttpResponse("Om Gang Ganpataye Namah" + str(device_state))
-    return HttpResponse(str(device_state))
+    last_device = DeviceState.objects.last()
+    device_history = DeviceState.objects.all().order_by('-time')
+    device_control = DeviceControl.objects.last()
+    data = {
+        'last_device': last_device,
+        'device_history': device_history[:3],
+        'device_control': device_control,
+    }
+    return render(request, 'monitor/home.html', data)
 
 
 def log(request):

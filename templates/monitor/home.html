@@ -1,0 +1,135 @@
+{% extends 'base.html' %}
+{% block 'body' %}
+    <div class="row">
+        <div class="col-md-6">
+            <div class="well text-center">
+                <h4>Device Status</h4>
+                <br>
+                <p>Moisture : {{ last_device.moisture }}</p>
+                <p>Pump Status: {% if last_device.status %}ON{% else %}OFF{% endif %}</p>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="well text-center">
+                <h4>Device Control</h4>
+                <br>
+                <input id="mode"type="checkbox" data-toggle="toggle" data-on="Automated" data-off="Manual" data-onstyle="warning" data-offstyle="info">
+                <br>
+                <br>
+                <div id="set-wrapper" >
+                    <input id="set" type="checkbox" checked data-toggle="toggle" data-on="Turn Motor ON" data-off="Turn Motor OFF" data-onstyle="success">
+                </div>
+            </div>
+        </div>
+    </div>
+    <h3>History</h3>
+    <hr>
+    <table class="table table-striped table-hover table-bordered">
+        <th>Moisture Value</th>
+        <th>Motor Status</th>
+        <th>Time</th>
+        {% for device in device_history %}
+            <tr>
+                <td>{{ device.moisture }}</td>
+                <td>{% if device.status %}ON{% else %}OFF{% endif %}</td>
+                <td>{{ device.time }}</td>
+            </tr>
+        {% endfor %}
+         <tr class="text-center">
+             <td colspan="3">
+                 <a href="{% url 'history' %}"class="btn btn-md btn-primary">View Complete History</a>
+             </td>
+         </tr>
+    </table>
+
+    <script>
+        function loadlink(){
+        $('#links').load('test.php',function () {
+            $(this).unwrap();
+        });
+}
+
+        $(function(){
+            actual_mode = '{{ device_control.mode }}'
+            $('#set-wrapper').hide();
+            $('#set-wrapper').show();
+
+            if(actual_mode == 'automated'){
+                console.log("inside");
+                $('#mode').attr('checked',true);
+                $('#set-wrapper').hide();
+            }
+
+            $('#mode').change(function() {
+                val = $('#mode').prop('checked');
+                if (val == true) {
+                    $('#set-wrapper').hide();
+                }
+                else{
+                    $('#set-wrapper').show();
+                }
+            });
+        })
+    </script>
+    <!-- css for round button -->
+    <style>
+        /* The switch - the box around the slider */
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+        }
+
+        /* Hide default HTML checkbox */
+        .switch input {display:none;}
+
+        /* The slider */
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            -webkit-transition: .4s;
+            transition: .4s;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            -webkit-transition: .4s;
+            transition: .4s;
+        }
+
+        input:checked + .slider {
+            background-color: #2196F3;
+        }
+
+        input:focus + .slider {
+            box-shadow: 0 0 1px #2196F3;
+        }
+
+        input:checked + .slider:before {
+            -webkit-transform: translateX(26px);
+            -ms-transform: translateX(26px);
+            transform: translateX(26px);
+        }
+
+        /* Rounded sliders */
+        .slider.round {
+            border-radius: 34px;
+        }
+
+        .slider.round:before {
+            border-radius: 50%;
+        }
+    </style>
+{% endblock %}
