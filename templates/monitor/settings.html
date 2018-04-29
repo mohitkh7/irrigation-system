@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+{% block 'body' %}
+    <div style="text-align:center">
+        <h1>
+            Settings
+        </h1>
+    </div>
+    <!-- errors -->
+    {% if form.non_field_errors %}
+        {% for error in form.non_field_errors %}
+            <div class="form-group has-errors text-danger">
+                {{ error }}
+            </div>
+        {% endfor %}
+    {% endif %}
+    <!-- //errors -->
+    {% for message in messages %}
+        <div class="alert alert-success">
+            {{ message }}
+        </div>
+    {% endfor %}
+    <div class="col-md-2"></div>
+    <div class="col-md-8">
+        <div class="jumbotron">
+            <div class="container">
+                <form class="form-horizontal" method="POST">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label class="col-md-4 control-label" for="lower_threshold">Lower_Threshold</label>
+                        <div class="col-md-8">
+                            <div class="input-group">
+                                <input class="form-control" id="lower_threshold" name="lower_threshold" type="number" value="{{ form.lower_threshold.value }}">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-md-4 control-label" for="upper_threshold">Upper_Threshold</label>
+                        <div class="col-md-8">
+                            <div class="input-group">
+                                <input class="form-control" id="upper_threshold" name="upper_threshold" type="number" value="{{ form.upper_threshold.value }}">
+                            </div>
+                        </div>
+                    </div>
+
+
+
+                    <div class="form-group " style="text-align:center">
+                        <input type="submit" class="btn btn-lg btn-primary" value="Update">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-2"></div>
+
+
+
+
+{% endblock %}

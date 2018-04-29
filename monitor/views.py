@@ -1,6 +1,7 @@
+from django.contrib.messages.views import SuccessMessageMixin
 from django.shortcuts import render
 from django.http import HttpResponse
-from django.views.generic import ListView, CreateView
+from django.views.generic import ListView, CreateView, UpdateView
 from .models import DeviceState, DeviceControl
 
 
@@ -22,9 +23,18 @@ class LogView(ListView):
     ordering = ['-time']
     template_name = 'monitor/history.html'
     context_object_name = 'devices'
-    paginate_by = 10
+    paginate_by = 20
+
 
 class DeviceStateCreateView(CreateView):
     model = DeviceState
     fields = ('moisture', 'status')
     template_name = "monitor/test.html"
+
+
+class DeviceControlUpdateView(SuccessMessageMixin, UpdateView):
+    model = DeviceControl
+    fields = ('lower_threshold', 'upper_threshold')
+    template_name ="monitor/settings.html"
+    success_message = "Settings updated successfully"
+    success_url = '/settings/1/'

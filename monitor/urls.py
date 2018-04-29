@@ -17,7 +17,7 @@ Including another URLconf
 from django.urls import path, include
 from rest_framework import routers
 
-from .views import index, log, LogView, DeviceStateCreateView
+from .views import index, log, LogView, DeviceStateCreateView, DeviceControlUpdateView
 
 '''
 REST Api
@@ -32,4 +32,5 @@ urlpatterns = [
     path('log/', log, name='log'),
     path('history/', LogView.as_view(), name="history"),
     path('test/', DeviceStateCreateView.as_view(), name="test"),
+    path('settings/<int:pk>/', DeviceControlUpdateView.as_view(), name="settings")
 ]
