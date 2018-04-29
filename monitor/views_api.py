@@ -81,3 +81,18 @@ def get_device_detail():
 
     return (state, lower_threshold, upper_threshold, mode)
 
+
+def update_mode(request):
+    device = DeviceControl.objects.first()
+    set_mode_to = request.GET['mode']
+    device.mode = set_mode_to
+    device.save()
+    return JsonResponse({'msg':'Mode Updated'});
+
+
+def update_set(request):
+    device = DeviceControl.objects.first()
+    set = request.GET['set']
+    device.set_state = set
+    device.save()
+    return JsonResponse({'msg':'Set_State Updated '+set});

@@ -15,9 +15,10 @@
                 <br>
                 <input id="mode"type="checkbox" data-toggle="toggle" data-on="Automated" data-off="Manual" data-onstyle="warning" data-offstyle="info">
                 <br>
-                <br>
                 <div id="set-wrapper" >
-                    <input id="set" type="checkbox" checked data-toggle="toggle" data-on="Turn Motor ON" data-off="Turn Motor OFF" data-onstyle="success">
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <br>
+                    <input id="set" type="checkbox" checked data-toggle="toggle" data-on="Turn Pump ON" data-off="Turn Pump OFF" data-onstyle="success">
                 </div>
             </div>
         </div>
@@ -43,33 +44,61 @@
     </table>
 
     <script>
-        function loadlink(){
-        $('#links').load('test.php',function () {
-            $(this).unwrap();
-        });
-}
-
         $(function(){
-            actual_mode = '{{ device_control.mode }}'
+            actual_mode = '{{ device_control.mode }}';
+            actual_set = '{{ device_control.set_state }}';
             $('#set-wrapper').hide();
             $('#set-wrapper').show();
 
+            // set motor button based on db value
+            if(actual_set == 'True'){
+                $('#set').bootstrapToggle('on');
+            }
+            else{
+                $('#set').bootstrapToggle('off');
+            }
+
+            //  hide initially
             if(actual_mode == 'automated'){
                 console.log("inside");
                 $('#mode').attr('checked',true);
                 $('#set-wrapper').hide();
             }
 
+            // when mode is changed
             $('#mode').change(function() {
+                // hide and display the pump select
                 val = $('#mode').prop('checked');
                 if (val == true) {
                     $('#set-wrapper').hide();
+                    $.ajax({
+                        url: '/api/update-mode/?mode=automated',
+                    })
                 }
                 else{
                     $('#set-wrapper').show();
+                    $.ajax({
+                        url: '/api/update-mode/?mode=manual',
+                    })
+                }
+
+            });
+
+            // when pump state is changed
+            $('#set').change(function() {
+                val = $('#set').prop('checked');
+                if (val == true){
+                    $.ajax({
+                        url: '/api/update-set/?set=True',
+                    })
+                }
+                else{
+                    $.ajax({
+                        url: '/api/update-set/?set=False',
+                    })
                 }
             });
-        })
+        });
     </script>
     <!-- css for round button -->
     <style>
