@@ -6,7 +6,13 @@
                 <h4>Device Status</h4>
                 <br>
                 <p>Moisture : {{ last_device.moisture }}</p>
-                <p>Pump Status: {% if last_device.status %}ON{% else %}OFF{% endif %}</p>
+                <p>Pump Status:
+                    {% if last_device.status %}
+                        <span class="label label-success">ON</span>
+                    {% else %}
+                        <span class="label label-danger">OFF</span>
+                    {% endif %}
+                </p>
             </div>
         </div>
         <div class="col-md-6">
@@ -33,7 +39,7 @@
             <tr>
                 <td>{{ device.moisture }}</td>
                 <td>{% if device.status %}ON{% else %}OFF{% endif %}</td>
-                <td>{{ device.time }}</td>
+                <td>{{ device.time | timesince}} ago ({{ device.time }})</td>
             </tr>
         {% endfor %}
          <tr class="text-center">
